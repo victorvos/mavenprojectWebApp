@@ -1,14 +1,11 @@
-<%@page import="com.mongodb.MongoClient"%>
-<%@page import="com.mongodb.MongoClientOptions"%>
-<%@page import="com.mongodb.MongoCredential"%>
-<%@page import="com.mongodb.ServerAddress"%>
-<%@page import="com.mongodb.client.MongoCollection"%>
-<%@page import="com.mongodb.client.MongoDatabase"%>
-<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
-<%@page import="org.bson.Document"%>
-<%@page import="java.util.Iterator"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page import="nl.hu.sie.bep.friendspammer.MongoSaver" %>
+<%@ page import="nl.hu.sie.bep.friendspammer.Record" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ListIterator" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -28,51 +25,17 @@
 	</tr>
 </thead>
 <tbody>
-<% 
+	<% List<Record> history = MongoSaver. %>
+	<% for(Record historyRecord : history) { %>
+	<tr>
+		<td><%= historyRecord.getTo() %></td>
+		<td><%= historyRecord.getFrom() %></td>
+		<td><%= historyRecord.getSubject() %></td>
+		<td><%= historyRecord.getText() %></td>
+		<td><%= historyRecord.getAsHtml() %></td>
 
-String userName = "YOUR USER";
-String password = "YOUR PASS";
-String database = "friendspammer";
-
-MongoCredential credential = MongoCredential.createCredential(userName, database, password.toCharArray());
-
-MongoClient mongoClient = new MongoClient(new ServerAddress("YOUR HOST", 27939), credential, MongoClientOptions.builder().build());
-	
-	MongoDatabase db = mongoClient.getDatabase( database );
-	
-	MongoCollection<Document> c = db.getCollection("email");
-	
-	Iterator<Document> it = c.find().iterator();
-	
-	while(it.hasNext())
-	{
-		Document email = it.next();
-		
-		%>
-			<tr>
-				<td><%=email.get("to") %></td>
-				<td><%=email.get("from") %></td>
-				<td><%=email.get("subject") %></td>
-				<td><%=email.get("text") %></td>
-				<td><%=email.get("asHtml") %></td>
-				
-			</tr>
-		
-		
-		
-		
-		<%
-		
-		
-	}
-
-
-	mongoClient.close();
-
-
-
-
-%>
+	</tr>
+	<% } %>
 
 </tbody>
 </table>
